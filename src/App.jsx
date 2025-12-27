@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, useMemo } from 'react'
 import {
+  Bike,
   Clock,
   MapPin,
   Truck,
@@ -20,7 +21,7 @@ import logo from './assets/app_logo.jpg'
 const TABS = [
   { id: 'created', label: 'New', status: ['pending', 'on-hold'], icon: ShoppingBag },
   { id: 'processed', label: 'Processed', status: ['processing'], icon: ShoppingCart },
-  { id: 'dispersed', label: 'Dispersed', status: ['dispatched'], icon: Truck },
+  { id: 'dispersed', label: 'Dispersed', status: ['dispatched'], icon: Bike },
   { id: 'completed', label: 'Completed', status: ['completed'], icon: CheckCircle },
   { id: 'canceled', label: 'Canceled', status: ['cancelled'], icon: XCircle },
 ]
