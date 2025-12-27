@@ -115,10 +115,12 @@ function App() {
     window.open(`https://www.google.com/maps/dir/?api=1&destination=${deliveryCoords}`, '_blank')
   }
 
-  const filteredOrders = orders.filter(order => {
-    const currentTab = TABS.find(t => t.id === activeTab)
-    return currentTab.status.includes(order.status)
-  })
+  const filteredOrders = orders
+    .filter(order => {
+      const currentTab = TABS.find(t => t.id === activeTab)
+      return currentTab.status.includes(order.status)
+    })
+    .sort((a, b) => new Date(b.date_created) - new Date(a.date_created));
 
   return (
     <div className="app-container">
