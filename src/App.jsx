@@ -1,6 +1,5 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useMemo } from 'react'
 import {
-  Package,
   Clock,
   MapPin,
   Truck,
@@ -8,12 +7,10 @@ import {
   AlertCircle,
   Filter,
   ShoppingCart,
-  CalendarCheck,
   CheckCircle,
   XCircle,
   User,
   ShoppingBag,
-  CircleDollarSign,
   Menu
 } from 'lucide-react'
 import { subDays, startOfDay, format } from 'date-fns'
@@ -38,7 +35,19 @@ const DATE_FILTERS = [
 const AUTH_TOKEN = import.meta.env.VITE_AUTH_TOKEN
 const API_URL = import.meta.env.VITE_API_URL
 
+// Custom hook for mobile detection
+function useIsMobile() {
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 640);
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth <= 640);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+  return isMobile;
+}
+
 function App() {
+  const isMobile = useIsMobile();
   const [activeTab, setActiveTab] = useState('created')
   const [dateFilter, setDateFilter] = useState('daily')
   const [orders, setOrders] = useState([])
@@ -92,7 +101,8 @@ function App() {
     orders.forEach(order => {
       const coords = order.meta_data?.find(m => m.key === 'map_coordinates')?.value
       if (coords) {
-        setTimeout(() => resolveAreaName(order.id, coords), 1000)
+        const timeout = setTimeout(() => resolveAreaName(order.id, coords), 1000)
+        return () => clearTimeout(timeout)
       }
     })
   }, [orders])
@@ -115,12 +125,12 @@ function App() {
     window.open(`https://www.google.com/maps/dir/?api=1&destination=${deliveryCoords}`, '_blank')
   }
 
-  const filteredOrders = orders
+  const filteredOrders = useMemo(() => orders
     .filter(order => {
       const currentTab = TABS.find(t => t.id === activeTab)
       return currentTab.status.includes(order.status)
     })
-    .sort((a, b) => new Date(b.date_created) - new Date(a.date_created));
+    .sort((a, b) => new Date(b.date_created) - new Date(a.date_created)), [orders, activeTab]);
 
   return (
     <div className="app-container">
@@ -129,7 +139,7 @@ function App() {
           <div className="brand-section">
             <Menu className="mobile-menu-icon" size={24} style={{ marginRight: '1rem', color: 'white', display: 'none' }} />
             <img src={logo} alt="KhasApp Logo" className="app-logo" />
-            <h1>{window.innerWidth <= 640 ? 'Active Orders' : 'KhasApp'}</h1>
+            <h1>{isMobile ? 'Active Orders' : 'KhasApp'}</h1>
           </div>
 
           <div className="header-info">
@@ -180,8 +190,8 @@ function App() {
                 title={tab.label}
               >
                 <div className="tab-icon-wrapper">
-                  {window.innerWidth <= 640 ? <Icon size={24} /> : tab.label}
-                  {window.innerWidth <= 640 && count > 0 && (
+                  {isMobile ? <Icon size={24} /> : tab.label}
+                  {isMobile && count > 0 && (
                     <span className="tab-badge">{count}</span>
                   )}
                 </div>
@@ -217,7 +227,7 @@ function App() {
             >
               <div className="card-header">
                 <div className="order-id">
-                  {window.innerWidth <= 640 ? (
+                  {isMobile ? (
                     <span className="value">#{order.number}</span>
                   ) : (
                     <>
@@ -233,12 +243,12 @@ function App() {
                       d.setHours(d.getHours() + 1);
                       const timeStr = format(d, 'hh:mm a');
                       const period = getTimePeriod(d);
-                      return window.innerWidth <= 640
+                      return isMobile
                         ? `${timeStr} ${period}`
                         : timeStr;
                     })()}
                   </span>
-                  {window.innerWidth > 640 && (
+                  {!isMobile && (
                     <span style={{ fontSize: '0.65rem' }}>
                       {(() => {
                         const d = new Date(order.date_created);
@@ -248,7 +258,7 @@ function App() {
                     </span>
                   )}
                 </div>
-                {window.innerWidth <= 640 && <ShoppingCart size={20} />}
+                {isMobile && <ShoppingCart size={20} />}
               </div>
 
               <div className="card-body-flex">
@@ -258,7 +268,7 @@ function App() {
                     <div className="value">
                       {(() => {
                         const d = new Date(order.date_created);
-                        d.setHours(d.getHours() + 2); // 1 hour ahead of order time (+2 from server)
+                        d.setHours(d.getHours() + 2);
                         return `${format(d, 'hh:mm a')} ${getTimePeriod(d)}`;
                       })()}
                     </div>
@@ -293,7 +303,7 @@ function App() {
                 </div>
               </div>
 
-              {window.innerWidth > 640 && (
+              {!isMobile && (
                 <div className="location-bar">
                   <MapPin size={14} />
                   <span>{areaNames[order.id] || 'Locating...'}</span>
@@ -323,7 +333,7 @@ function App() {
                   }}
                 >
                   <Navigation size={16} />
-                  {window.innerWidth <= 640
+                  {isMobile
                     ? (areaNames[order.id] || 'Map View')
                     : 'Get Directions'}
                 </button>
