@@ -249,7 +249,7 @@ function App() {
                     <div className="value">
                       {(() => {
                         const d = new Date(order.date_created);
-                        d.setHours(d.getHours() + 1);
+                        d.setHours(d.getHours() + 2); // 1 hour ahead of order time (+2 from server)
                         return `${format(d, 'hh:mm a')} ${getTimePeriod(d)}`;
                       })()}
                     </div>
@@ -315,7 +315,7 @@ function App() {
                 >
                   <Navigation size={16} />
                   {window.innerWidth <= 640
-                    ? (areaNames[order.id] || 'Loading Map...')
+                    ? (areaNames[order.id] || 'Map View')
                     : 'Get Directions'}
                 </button>
               </div>

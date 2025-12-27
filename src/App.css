@@ -14,8 +14,7 @@
 
 :root {
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
-    line-height: 1.2;
-    /* Reduced from 1.5 */
+    line-height: 1.05;
     font-weight: 400;
     color-scheme: light;
     color: #1e293b;
@@ -390,7 +389,10 @@ body {
 }
 
 .side-item {
-    text-align: right;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.5rem;
 }
 
 .side-item .label {
@@ -557,7 +559,10 @@ body {
         background: #90538d;
         /* Matching demo header color */
         padding: 0;
-        margin-bottom: 0.5rem;
+        margin-bottom: 0;
+        position: sticky;
+        top: 0;
+        z-index: 1000;
     }
 
     .header-content {
@@ -606,7 +611,7 @@ body {
 
     .tabs-nav {
         background: #90538d;
-        margin: -0.5rem 0 1rem;
+        margin: 0 0 1rem 0;
         padding: 0.5rem;
         border-radius: 0;
         border-top: 1px dotted rgba(255, 255, 255, 0.3);
@@ -615,7 +620,11 @@ body {
         gap: 0;
         justify-content: space-around;
         border: none;
-        box-shadow: none;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        position: sticky;
+        top: 45px;
+        /* Height of the header content */
+        z-index: 999;
     }
 
     .order-tracker-title {
