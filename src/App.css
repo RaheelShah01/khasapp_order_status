@@ -85,7 +85,6 @@ body {
 
 .page-subtitle {
     display: none;
-    /* Removing old position */
 }
 
 .title-bar {
@@ -107,7 +106,6 @@ body {
     align-items: center;
     gap: 1.5rem;
     flex-direction: row-reverse;
-    /* Places filter container at the rightmost side */
 }
 
 .filter-container {
@@ -127,8 +125,6 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    outline: none;
-    -webkit-tap-highlight-color: transparent;
 }
 
 .filter-trigger-btn:hover,
@@ -168,9 +164,6 @@ body {
     transition: all 0.2s;
     text-transform: uppercase;
     width: 100%;
-    outline: none;
-    user-select: none;
-    -webkit-tap-highlight-color: transparent;
 }
 
 .filter-option:hover {
@@ -209,7 +202,6 @@ body {
     border: 1px solid #99009922;
     position: sticky;
     top: 100px;
-    /* Adjusted to sit right under the header */
     z-index: 90;
 }
 
@@ -242,16 +234,6 @@ body {
     transition: all 0.2s ease;
     white-space: nowrap;
     flex-shrink: 0;
-    outline: none;
-    -webkit-tap-highlight-color: transparent;
-    user-select: none;
-}
-
-.tab-btn:active,
-.tab-btn:focus {
-    background: transparent;
-    outline: none;
-    box-shadow: none;
 }
 
 .tab-btn:hover {
@@ -271,7 +253,6 @@ body {
     top: -8px;
     right: -10px;
     background: #ffcc00;
-    /* Yellow badge like demo */
     color: #000;
     font-size: 0.65rem;
     font-weight: 800;
@@ -283,15 +264,11 @@ body {
     align-items: center;
     justify-content: center;
     border: 2px solid #90538d;
-    /* Matches nav background */
 }
 
 .tab-btn.active {
     background: #990099;
     color: #fff;
-    outline: none;
-    border: none;
-    box-shadow: none;
     position: relative;
 }
 
@@ -305,7 +282,6 @@ body {
 .order-card {
     background: #fff;
     border-radius: 28px;
-    /* Increased corner radius */
     padding: 1.5rem;
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
     transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
@@ -371,7 +347,6 @@ body {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
-    /* Reduced from 1.25rem */
 }
 
 .side-column {
@@ -379,7 +354,6 @@ body {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
-    /* Reduced from 1rem */
     padding-left: 0;
     border-left: 2px solid #f8fafc;
 }
@@ -478,8 +452,6 @@ body {
     gap: 0.5rem;
     transition: all 0.2s;
     box-shadow: 0 4px 12px rgba(153, 0, 153, 0.2);
-    outline: none;
-    -webkit-tap-highlight-color: transparent;
 }
 
 .direction-btn:hover {
@@ -571,36 +543,8 @@ body {
 }
 
 @media (max-width: 640px) {
-    .app-header h1 {
-        font-size: 1.2rem;
-    }
-
-    .header-info {
-        gap: 0.75rem;
-    }
-
-    .side-column {
-        width: 120px;
-    }
-
     .app-container {
         padding: 108px 0.5rem 40px;
-        /* Space for fixed header (48px) + tabs (50px) + margin */
-    }
-
-    .app-header {
-        background: #90538d;
-        /* Matching demo header color */
-        padding: 0;
-        margin-bottom: 0;
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        z-index: 1001;
-        height: 48px;
-        display: flex;
-        align-items: center;
     }
 
     .app-header {
@@ -615,6 +559,7 @@ body {
         height: 48px;
         display: flex;
         align-items: center;
+        justify-content: center;
     }
 
     .header-content {
@@ -635,7 +580,6 @@ body {
         align-items: center;
         width: 100%;
         padding: 0 40px;
-        /* Leave space for absolute filter icon */
     }
 
     .app-header h1 {
@@ -653,7 +597,6 @@ body {
 
     .app-logo {
         display: none;
-        /* Mobile header is text-centric in demo */
     }
 
     .header-info {
@@ -677,8 +620,9 @@ body {
         display: none;
     }
 
-    .filter-container {
-        margin-right: 0.25rem;
+    .filter-option.selected {
+        background: #a46ca1;
+        color: white;
     }
 
     .tabs-nav {
@@ -688,7 +632,6 @@ body {
         border-radius: 0;
         border-top: 1px dotted rgba(255, 255, 255, 0.3);
         flex-direction: row;
-        /* Back to horizontal row for icons */
         gap: 0;
         justify-content: space-around;
         border: none;
@@ -703,7 +646,6 @@ body {
 
     .order-tracker-title {
         display: none;
-        /* Hide title inside tabs for mobile */
     }
 
     .tabs-options {
@@ -722,7 +664,6 @@ body {
         background: transparent;
         color: white;
         border-bottom: 2px solid #ff4b4b;
-        /* Demo active indicator */
     }
 
     .order-card {
@@ -735,17 +676,12 @@ body {
 
     .card-header {
         background: #a46ca1;
-        /* Demo card header color */
         padding: 0.5rem 1rem;
         margin-bottom: 0;
         border-bottom: none;
         border-radius: 12px 12px 0 0;
         color: white;
         align-items: center;
-    }
-
-    .order-id .label {
-        display: none;
     }
 
     .order-id .value {
@@ -805,21 +741,14 @@ body {
         flex-direction: row;
         align-items: center;
         gap: 0.4rem;
-        text-align: left;
     }
 
     .rs-badge {
-        /* Inherited from global with mobile adjustment if needed */
         width: 28px;
         height: 28px;
         font-size: 0.7rem;
     }
 
-    .side-item .label {
-        display: none;
-    }
-
-    /* Use icons instead */
     .side-item .value {
         font-size: 0.9rem;
         color: #000;
@@ -834,11 +763,6 @@ body {
         justify-content: center;
     }
 
-    .cost-display {
-        display: none;
-    }
-
-    /* Handled in side-column row */
     .direction-btn {
         background: transparent;
         color: #a46ca1;
@@ -856,5 +780,16 @@ body {
         gap: 0.5rem;
         font-size: 0.8rem;
         color: #666;
+    }
+
+    .orders-list {
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: flex-start !important;
+        align-items: stretch !important;
+        gap: 1rem;
+        width: 100%;
+        margin-top: 0;
+        padding: 0;
     }
 }
