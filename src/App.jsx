@@ -6,18 +6,26 @@ import {
   Truck,
   Navigation,
   AlertCircle,
-  Filter
+  Filter,
+  ShoppingCart,
+  CalendarCheck,
+  CheckCircle,
+  XCircle,
+  User,
+  ShoppingBag,
+  CircleDollarSign,
+  Menu
 } from 'lucide-react'
 import { subDays, startOfDay, format } from 'date-fns'
 import './App.css'
 import logo from './assets/app_logo.jpg'
 
 const TABS = [
-  { id: 'created', label: 'Created', status: ['pending', 'on-hold'] },
-  { id: 'processed', label: 'Processed', status: ['processing'] },
-  { id: 'dispersed', label: 'Dispersed', status: ['dispatched'] },
-  { id: 'completed', label: 'Completed', status: ['completed'] },
-  { id: 'canceled', label: 'Canceled', status: ['cancelled'] },
+  { id: 'created', label: 'New', status: ['pending', 'on-hold'], icon: ShoppingBag },
+  { id: 'processed', label: 'Processed', status: ['processing'], icon: ShoppingCart },
+  { id: 'dispersed', label: 'Dispersed', status: ['dispatched'], icon: Truck },
+  { id: 'completed', label: 'Completed', status: ['completed'], icon: CheckCircle },
+  { id: 'canceled', label: 'Canceled', status: ['cancelled'], icon: XCircle },
 ]
 
 const DATE_FILTERS = [
@@ -110,8 +118,9 @@ function App() {
       <header className="app-header">
         <div className="header-content">
           <div className="brand-section">
+            <Menu className="mobile-menu-icon" size={24} style={{ marginRight: '1rem', color: 'white', display: 'none' }} />
             <img src={logo} alt="KhasApp Logo" className="app-logo" />
-            <h1>KhasApp</h1>
+            <h1>{window.innerWidth <= 640 ? 'Active Orders' : 'KhasApp'}</h1>
           </div>
 
           <div className="header-info">
@@ -150,15 +159,19 @@ function App() {
       <nav className="tabs-nav">
         <h2 className="order-tracker-title">Order Tracker</h2>
         <div className="tabs-options">
-          {TABS.map(tab => (
-            <button
-              key={tab.id}
-              className={`tab-btn ${activeTab === tab.id ? 'active' : ''}`}
-              onClick={() => setActiveTab(tab.id)}
-            >
-              {tab.label}
-            </button>
-          ))}
+          {TABS.map(tab => {
+            const Icon = tab.icon;
+            return (
+              <button
+                key={tab.id}
+                className={`tab-btn ${activeTab === tab.id ? 'active' : ''}`}
+                onClick={() => setActiveTab(tab.id)}
+                title={tab.label}
+              >
+                {window.innerWidth <= 640 ? <Icon size={24} /> : tab.label}
+              </button>
+            );
+          })}
         </div>
       </nav>
 
@@ -188,57 +201,67 @@ function App() {
             >
               <div className="card-header">
                 <div className="order-id">
-                  <span className="label">Order Number</span>
-                  <span className="value">#{order.number}</span>
+                  {window.innerWidth <= 640 ? (
+                    <span className="value">#{order.number}</span>
+                  ) : (
+                    <>
+                      <span className="label">Order Number</span>
+                      <span className="value">#{order.number}</span>
+                    </>
+                  )}
                 </div>
                 <div className="order-time">
-                  <span>{new Date(order.date_created).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
-                  <span style={{ fontSize: '0.65rem' }}>{new Date(order.date_created).toLocaleDateString([], { day: '2-digit', month: 'short' })}</span>
+                  <span>
+                    {window.innerWidth <= 640
+                      ? `${format(new Date(order.date_created), 'hh:mm a')} Morning`
+                      : format(new Date(order.date_created), 'hh:mm a')}
+                  </span>
+                  {window.innerWidth > 640 && (
+                    <span style={{ fontSize: '0.65rem' }}>{new Date(order.date_created).toLocaleDateString([], { day: '2-digit', month: 'short' })}</span>
+                  )}
                 </div>
+                {window.innerWidth <= 640 && <ShoppingCart size={20} />}
               </div>
 
               <div className="card-body-flex">
                 <div className="main-column">
                   <div className="info-item">
-                    <div className="label">Rider</div>
-                    <div className="value">
-                      <Truck size={14} style={{ marginRight: '4px' }} />
-                      {order.rider_name || 'Not Assigned'}
-                    </div>
+                    <div className="label">Delivery Time :</div>
+                    <div className="value">{format(new Date(order.date_created), 'hh:mm a')} Morning</div>
                   </div>
-
                   <div className="info-item">
-                    <div className="label">Distance & ETA</div>
-                    <div className="value">
-                      {getMetadataValue(order, 'customer_store_distance')} km | {getMetadataValue(order, 'expected_time')} mins
-                    </div>
+                    <div className="label">Distance :</div>
+                    <div className="value">{getMetadataValue(order, 'customer_store_distance')} KM</div>
                   </div>
-
                   <div className="info-item">
-                    <div className="label">Exact Address</div>
-                    <div className="value" style={{ fontSize: '0.8rem', color: '#64748b' }}>
-                      {order.shipping.address_1}
-                      {areaNames[order.id] && (
-                        <span className="area-text"> | {areaNames[order.id]}</span>
-                      )}
-                    </div>
+                    <div className="label">Rider Name :</div>
+                    <div className="value">{order.rider_name || 'Not Assigned'}</div>
+                  </div>
+                  <div className="info-item">
+                    <div className="label">Payment Mode :</div>
+                    <div className="value">{order.payment_method_title}</div>
                   </div>
                 </div>
 
                 <div className="side-column">
                   <div className="side-item">
-                    <div className="label">Customer</div>
-                    <div className="value">{order.billing.first_name}</div>
+                    <User size={18} />
+                    <div className="value">{order.customer_id}</div>
                   </div>
                   <div className="side-item">
-                    <div className="label">Products</div>
-                    <div className="value">{order.line_items.length} Items</div>
+                    <ShoppingBag size={18} />
+                    <div className="value">{order.line_items.length}</div>
                   </div>
                   <div className="side-item">
-                    <div className="label">Payment</div>
-                    <div className="value" style={{ fontSize: '0.75rem' }}>{order.payment_method_title}</div>
+                    <div style={{ background: '#eee', borderRadius: '50%', padding: '2px 4px', fontSize: '0.7rem' }}>Rs.</div>
+                    <div className="value">{order.total}</div>
                   </div>
                 </div>
+              </div>
+
+              <div className="location-bar">
+                <MapPin size={14} />
+                <span>{areaNames[order.id] || 'Locating...'}</span>
               </div>
 
               {selectedOrder === order.id && (
@@ -256,10 +279,6 @@ function App() {
               )}
 
               <div className="card-footer-actions">
-                <div className="cost-display">
-                  <span className="label">Total Cost</span>
-                  <span className="value">{order.currency} {order.total}</span>
-                </div>
                 <button
                   className="direction-btn"
                   onClick={(e) => {
@@ -268,7 +287,7 @@ function App() {
                   }}
                 >
                   <Navigation size={16} />
-                  Get Directions
+                  {window.innerWidth <= 640 ? 'Map View' : 'Get Directions'}
                 </button>
               </div>
             </div>
