@@ -81,7 +81,7 @@ function App() {
       const [lat, lon] = coords.split(',').map(c => c.trim())
       const response = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`)
       const data = await response.json()
-      const area = data.address.suburb || data.address.neighbourhood || data.address.city_district || data.address.city || 'Location Linked'
+      const area = data.address.suburb || data.address.neighbourhood || data.address.city_district || data.address.city || 'Get Directions'
       setAreaNames(prev => ({ ...prev, [orderId]: area }))
     } catch (err) {
       console.error('Geocoding error:', err)
