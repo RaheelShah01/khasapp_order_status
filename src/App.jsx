@@ -102,6 +102,13 @@ function App() {
     return item ? item.value : 'N/A'
   }
 
+  const getTimePeriod = (date) => {
+    const hour = date.getHours();
+    if (hour >= 5 && hour < 16) return 'Morning';
+    if (hour >= 16 && hour < 20) return 'Evening';
+    return 'Night';
+  }
+
   const handleGetDirections = (order) => {
     const deliveryCoords = getMetadataValue(order, 'map_coordinates')
     if (deliveryCoords === 'N/A') return
@@ -212,12 +219,24 @@ function App() {
                 </div>
                 <div className="order-time">
                   <span>
-                    {window.innerWidth <= 640
-                      ? `${format(new Date(order.date_created), 'hh:mm a')} Morning`
-                      : format(new Date(order.date_created), 'hh:mm a')}
+                    {(() => {
+                      const d = new Date(order.date_created);
+                      d.setHours(d.getHours() + 1);
+                      const timeStr = format(d, 'hh:mm a');
+                      const period = getTimePeriod(d);
+                      return window.innerWidth <= 640
+                        ? `${timeStr} ${period}`
+                        : timeStr;
+                    })()}
                   </span>
                   {window.innerWidth > 640 && (
-                    <span style={{ fontSize: '0.65rem' }}>{new Date(order.date_created).toLocaleDateString([], { day: '2-digit', month: 'short' })}</span>
+                    <span style={{ fontSize: '0.65rem' }}>
+                      {(() => {
+                        const d = new Date(order.date_created);
+                        d.setHours(d.getHours() + 1);
+                        return d.toLocaleDateString([], { day: '2-digit', month: 'short' });
+                      })()}
+                    </span>
                   )}
                 </div>
                 {window.innerWidth <= 640 && <ShoppingCart size={20} />}
@@ -227,7 +246,13 @@ function App() {
                 <div className="main-column">
                   <div className="info-item">
                     <div className="label">Delivery Time :</div>
-                    <div className="value">{format(new Date(order.date_created), 'hh:mm a')} Morning</div>
+                    <div className="value">
+                      {(() => {
+                        const d = new Date(order.date_created);
+                        d.setHours(d.getHours() + 1);
+                        return `${format(d, 'hh:mm a')} ${getTimePeriod(d)}`;
+                      })()}
+                    </div>
                   </div>
                   <div className="info-item">
                     <div className="label">Distance :</div>
@@ -253,16 +278,18 @@ function App() {
                     <div className="value">{order.line_items.length}</div>
                   </div>
                   <div className="side-item">
-                    <div style={{ background: '#eee', borderRadius: '50%', padding: '2px 4px', fontSize: '0.7rem' }}>Rs.</div>
+                    <div className="rs-badge">Rs.</div>
                     <div className="value">{order.total}</div>
                   </div>
                 </div>
               </div>
 
-              <div className="location-bar">
-                <MapPin size={14} />
-                <span>{areaNames[order.id] || 'Locating...'}</span>
-              </div>
+              {window.innerWidth > 640 && (
+                <div className="location-bar">
+                  <MapPin size={14} />
+                  <span>{areaNames[order.id] || 'Locating...'}</span>
+                </div>
+              )}
 
               {selectedOrder === order.id && (
                 <div className="order-details">
@@ -287,7 +314,9 @@ function App() {
                   }}
                 >
                   <Navigation size={16} />
-                  {window.innerWidth <= 640 ? 'Map View' : 'Get Directions'}
+                  {window.innerWidth <= 640
+                    ? (areaNames[order.id] || 'Loading Map...')
+                    : 'Get Directions'}
                 </button>
               </div>
             </div>
