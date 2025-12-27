@@ -603,9 +603,23 @@ body {
         align-items: center;
     }
 
+    .app-header {
+        background: #90538d;
+        padding: 0;
+        margin-bottom: 0;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 1001;
+        height: 48px;
+        display: flex;
+        align-items: center;
+    }
+
     .header-content {
         background: transparent;
-        padding: 0 1rem;
+        padding: 0;
         height: 100%;
         width: 100%;
         display: flex;
@@ -620,6 +634,8 @@ body {
         justify-content: center;
         align-items: center;
         width: 100%;
+        padding: 0 40px;
+        /* Leave space for absolute filter icon */
     }
 
     .app-header h1 {
@@ -631,6 +647,8 @@ body {
         text-align: center;
         width: 100%;
         margin: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 
     .app-logo {
