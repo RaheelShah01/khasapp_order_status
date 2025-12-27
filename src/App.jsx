@@ -168,6 +168,8 @@ function App() {
         <div className="tabs-options">
           {TABS.map(tab => {
             const Icon = tab.icon;
+            const count = orders.filter(o => tab.status.includes(o.status)).length;
+
             return (
               <button
                 key={tab.id}
@@ -175,7 +177,12 @@ function App() {
                 onClick={() => setActiveTab(tab.id)}
                 title={tab.label}
               >
-                {window.innerWidth <= 640 ? <Icon size={24} /> : tab.label}
+                <div className="tab-icon-wrapper">
+                  {window.innerWidth <= 640 ? <Icon size={24} /> : tab.label}
+                  {window.innerWidth <= 640 && count > 0 && (
+                    <span className="tab-badge">{count}</span>
+                  )}
+                </div>
               </button>
             );
           })}
